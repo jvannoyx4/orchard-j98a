@@ -168,7 +168,7 @@ Boards Orchard builds for. States: working, untested, missing, none (no such har
 | `n71m` | untested | missing | untested | missing | untested | untested | untested | missing | missing | missing | missing | missing | missing | missing | missing | missing | missing | missing | untested | untested | untested | untested | missing | missing | missing | missing | missing |
 | `j127` | untested | missing | untested | missing | untested | missing | missing | missing | missing | missing | missing | missing | missing | missing | missing | missing | missing | missing | untested | untested | untested | untested | missing | missing | missing | missing | missing |
 | `j128` | untested | missing | untested | missing | untested | missing | missing | missing | missing | missing | missing | missing | missing | missing | missing | missing | missing | missing | untested | untested | untested | untested | missing | missing | missing | missing | missing |
-| `j98a` | working | missing | untested | missing | untested | missing | missing | missing | missing | missing | missing | missing | missing | missing | none | working | missing | missing | untested | untested | working | working | missing | missing | missing | missing | missing |
+| `j98a` | working | missing | working | missing | working | missing | missing | working | missing | missing | missing | working | untested | untested | none | working | missing | missing | untested | untested | working | working | missing | missing | missing | missing | missing |
 | `j99a` | untested | missing | untested | missing | untested | missing | missing | missing | missing | missing | missing | missing | missing | missing | missing | missing | missing | missing | untested | untested | untested | untested | missing | missing | missing | missing | missing |
 | `d10` | untested | untested | untested | missing | untested | untested | untested | missing | missing | untested | untested | missing | missing | missing | missing | missing | missing | missing | untested | untested | untested | untested | missing | missing | missing | missing | missing |
 | `d101` | untested | untested | untested | missing | untested | untested | untested | missing | missing | untested | untested | missing | missing | missing | missing | missing | missing | missing | untested | untested | untested | untested | missing | missing | missing | missing | missing |
@@ -254,6 +254,10 @@ A yes means an enabled device tree node binds a driver in `7.3.0-rc1-orchard-app
 | `j72s` | Microphone | untested, but no driver binds |
 | `j71t` | Microphone | working, but no driver binds |
 | `j72t` | Microphone | untested, but no driver binds |
+| `j98a` | Light sensor | working, but no driver binds |
+| `j98a` | Wi-Fi | working, but no driver binds |
+| `j98a` | Bluetooth input devices | untested, but no driver binds |
+| `j98a` | Bluetooth audio | untested, but no driver binds |
 | `j98a` | Battery status | working, but no driver binds |
 | `d10` | Bluetooth input devices | missing, but a driver binds |
 | `d10` | Bluetooth audio | missing, but a driver binds |

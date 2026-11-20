@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "date": "2026-11-20",
+  "license": "MIT",
+  "compiler": "Ubuntu clang version 21.1.8 (6ubuntu1)",
+  "linker": "Ubuntu LLD 21.1.8",
+  "native_flags": [
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror"
+  ],
+  "cross_flags": [
+    "--target=aarch64-linux-gnu",
+    "--sysroot=$J98A_CROSS_SYSROOT",
+    "--gcc-toolchain=$J98A_GCC_TOOLCHAIN",
+    "-fuse-ld=lld",
+    "-static"
+  ],
+  "sysroot_packages": [
+    "libc6-arm64-cross_2.43-2ubuntu2cross1_all.deb",
+    "libc6-dev-arm64-cross_2.43-2ubuntu2cross1_all.deb",
+    "libgcc-14-dev-arm64-cross_14.3.0-14ubuntu1cross1_all.deb",
+    "linux-libc-dev-arm64-cross_7.0.0-13.13cross1_all.deb"
+  ],
+  "kernel_release": "7.3.0-rc1+",
+  "kernel_source_reference_commit": "c67b834b480bcb65d680526f56ae3f203663bc89",
+  "source_references": {
+    "H4_ioctl_and_flags": "drivers/bluetooth/hci_uart.h; drivers/bluetooth/hci_ldisc.c",
+    "H4_protocol": "drivers/bluetooth/hci_h4.c",
+    "HCI_user_channel": "net/bluetooth/hci_sock.c; include/net/bluetooth/hci_sock.h",
+    "management_packets": "include/net/bluetooth/mgmt.h; net/bluetooth/mgmt.c",
+    "normal_kernel_initialization": "net/bluetooth/hci_sync.c",
+    "patchram_sequence": "drivers/bluetooth/btbcm.c: btbcm_reset and btbcm_patchram",
+    "UART_last_close": "drivers/tty/serial/samsung_tty.c: apple_s5l_serial_startup/shutdown",
+    "firmware_recipe": "OrchardLinux/orchard devices/j98a/firmware.json",
+    "passive_monitor": "include/net/bluetooth/hci_mon.h; net/bluetooth/hci_sock.c; net/bluetooth/hci_core.c:hci_rx_work",
+    "management_early_status_send_return": "net/bluetooth/hci_sock.c:hci_mgmt_cmd; net/bluetooth/mgmt_util.c:mgmt_cmd_status",
+    "runtime_factory_address": "drivers/bluetooth/btbcm.c:btbcm_set_bdaddr (opcode 0xfc01; six bdaddr_t bytes)"
+  },
+  "firmware_reference": {
+    "name": "BCM.apple,j98a-USI.hcd",
+    "sha256": "958ee3706c9479017704aab1ea246ff77865628e75eae2d62bcb934cd10ab8a4",
+    "bytes": 59360,
+    "records": 295,
+    "included": false
+  },
+  "private_factory_address": "same physical device ADT: six display-order bytes, never included/logged; factory provisioning additionally requires private regular caller-owned nonsymlink file",
+  "proven": [
+    "raw_UART_reset_and_version",
+    "kernel_raw_H4_reset_and_version",
+    "exact_USI_Patchram_acknowledgments",
+    "post_patch_reset_and_version_8_4926_8_15_26119",
+    "metadata_monitor_command_event_framing",
+    "normal_Linux_HCI_initialization_and_management_ReadInfo",
+    "runtime_factory_address_write_and_readback",
+    "factory_address_agreement_after_normal_HCI_Reset",
+    "powered_managed_adapter",
+    "read_only_adapter_check_on_hardware",
+    "BR_EDR_enabled_LE_supported_but_disabled",
+    "secure_connections_capability_reported",
+    "zero_UART_errors_and_clean_SIGTERM_cleanup"
+  ],
+  "unproven": [
+    "RF_scan_or_connection",
+    "pairing",
+    "LE_enablement",
+    "audio",
+    "sleep_and_resume"
+  ],
+  "resolved_diagnostic_findings": [
+    "management_zero_send_return_bug_fixed_and_live_initialization_verified",
+    "factory_address_mismatch_resolved_by_same_device_runtime_FC01_write_and_verified_after_Reset"
+  ]
+}

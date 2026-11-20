@@ -7,10 +7,15 @@ findings for this board. The kernel changes are on the companion
 
 **Native Linux booted from RAM on this unit on 2026-11-20.** The display, USB
 serial console, USB networking with SSH and battery status readout worked with
-the companion kernel.
-Persistent installation remains unavailable: the six-port PCIe controller still
-needs a working S8001 link initialization sequence, and Linux did not enumerate
-the internal SSD. The Orchard catalog continues to block installation. The
+the companion kernel. Later checks in the same RAM session verified brightness
+control, all four hardware buttons and an ambient-light sensor's response to
+covering. A second kernel boot established touchscreen ROM communication,
+Bluetooth UART communication and PCIe enumeration of the Wi-Fi chip. Later
+live-module tests established Wi-Fi networking through `wlan0`, initialized a
+powered Bluetooth adapter, and captured touchscreen contact/release frames.
+Persistent installation remains unavailable: S8001 storage integration is
+unfinished, and Linux did not enumerate the internal SSD. The Orchard catalog
+continues to block installation. The
 standard Orchard release uses its own kernel; the results below refer to the
 companion kernel.
 
@@ -56,18 +61,104 @@ though the system reached both consoles without a kernel panic or oops. Internal
 storage, touch, Wi-Fi and the remaining peripherals still require the testing or
 development listed below. A registered driver alone is not a working feature.
 
+## Peripheral checks in the running RAM session
+
+The backlight changed from 1642 to 821 for five seconds and returned to 1642.
+The owner confirmed that the display visibly dimmed and recovered. Input event
+capture recorded 35 Volume Up presses, 34 releases, and 29 Volume Down
+press/release pairs; the capture ended during the final Volume Up press. A
+separate capture recorded 12 presses and 12 releases each for Home and Power.
+This qualifies input events from all four buttons, not suspend or resume.
+
+Loading the matching `industrialio.ko` and `tsl2583.ko` modules bound both CT821
+sensors. Both loaded the factory LSCI v3 calibration supplied by m1n1. The first
+sensor intentionally offers raw channels because screen-light compensation is
+not implemented: five uncovered readings were 481–482, and five readings while
+the owner covered the front camera/bezel were 265–276. The second sensor exposed
+calibrated lux (157–158 before covering and 164 during covering), but this check
+did not establish that it was covered or qualify its response or accuracy.
+
+The second test image loaded both light-sensor modules automatically after the
+USB session started. Its embedded kernel and device-tree hashes matched the
+host build receipt. The previously booted image is retained. No internal
+storage was written.
+
+## Transport checks in the second RAM boot
+
+The opt-in J98a touchscreen probe returned `1f 01 00 00` from one HBPP readiness
+exchange and powered the controller down successfully. This qualifies the
+tested ROM communication sequence at 500 kHz, including the reference clock,
+GPIO sequence and explicit SPI half-clock delay. A subsequent opt-in test
+uploaded the verified firmware and this unit's private calibration with all
+eight packets acknowledged. Firmware E2/E3 queries succeeded: platform 24,
+interface 17, maximum packet 8,676 bytes, and D1/D3/D9 report lengths 1/12/16.
+Both probes powered the controller down afterward. D3 descriptor reads at
+500 kHz and 4 MHz had a bad command byte and checksum. At the stock runtime
+SPI divider (24 MHz requested, 20,512,820 Hz effective), the full D3 descriptor
+passed both checks. D1 and D9 also validated, including measured sensor bounds.
+A tap/swipe check captured 18 checksummed frames with changing contact data and
+release reports; unconditional polling then stopped on an all-zero idle reply.
+Contact decoding and interrupt-driven service are under development. No Linux
+touch input device has been registered, and Apple Pencil remains unqualified.
+
+UART3 at 115200 baud with RTS/CTS completed HCI Reset and Read Local Version.
+The controller reported manufacturer 15, HCI/LMP version 7, HCI revision 4096
+and LMP subversion `0x6607`. The same commands then passed through Linux's HCI
+UART driver. A separate exact-file Patchram test acknowledged all 295 records
+of the hash-verified USI firmware and returned HCI/LMP version 8 with HCI
+revision 4926 after restart. The managed helper initially closed its UART too
+early: it treated a valid zero-return management send during initialization as
+an error. Correcting that handling let Linux complete initialization and return
+ReadInfo with HCI version 8 and manufacturer 15. The controller's initial address
+differed from the same-device factory value; the standard Broadcom runtime FC01
+command restored it, and private ReadBDADDR verified the result. Linux then
+powered the managed adapter on. An independent management query confirmed
+factory-address agreement, BR/EDR and LE capability, and secure-connections
+support; BR/EDR was enabled and LE was not. UART error counters remained zero.
+No device was paired. The helper powered the adapter off, restored its saved
+GPIO directions and released the lines; a hardware reset is needed to restore
+private mux/high-Z register state exactly. The reproducible source-only helpers
+and tests are in [tools/j98a-radio](../../tools/j98a-radio/README.rst).
+
+With only PCIe port 2 enabled, the modular S8001 driver bound and enumerated
+root port `106b:1005` and Wi-Fi endpoint `14e4:43a3`. The endpoint joined a DMA
+IOMMU group through DART2. Its memory BARs were assigned successfully. This
+qualified first-load link training and enumeration. The first `brcmfmac`
+probe identified BCM4350 revision 8 but timed out during firmware startup.
+Metadata confirmed OTP variant `CIDR-u-2.11` and the matching board NVRAM file.
+Firmware upload readback matched all 585,998 bytes. A private firmware-state
+capture and code analysis identified attach error 21: the board NVRAM lacked
+`macaddr`. Appending this unit's factory Wi-Fi address to a private RAM copy
+resolved startup. Firmware `7.64.133.16` initialized, TxCap loaded, `wlan0`
+appeared, and the PCIe MSI handler recorded 88 interrupts. This test also
+supplied the stock loader's random-seed block; its necessity has not been
+isolated. A separately monitored passive scan completed and found three access
+points on channels 1/6/11. On the owner's selected network, WPA2-PSK/CCMP
+association and DHCP succeeded. Three gateway and three Internet ICMP packets
+returned with no loss, explicitly bound/routed through `wlan0`; interface error
+counters remained zero and USB stayed up. This qualifies basic Wi-Fi networking,
+not throughput, roaming, long-duration stability or suspend. Host reload remains
+untested. Internal storage and external USB ports stayed disabled.
+
+The next DT includes a Wi-Fi endpoint and `wifi0` alias so existing m1n1 code
+can forward the factory MAC and 1024-byte per-unit calibration at boot. These
+values are not embedded in source. Schema and structural checks pass; this
+bootloader-provisioned path still needs the next RAM boot. Current live results
+used the private NVRAM copy described above.
+
 ## Hardware status
 
 | Hardware | What was checked | What still needs testing or development |
 | --- | --- | --- |
-| Internal SSD and external USB host | The controller has six physical ports. Storage, Wi-Fi and USB use ports 0, 2 and 4. The kernel models three DMA translation units and supports the unequal per-port MSI interrupt ranges in software. | S8001 PHY initialization, link training, DMA setup, and read-only enumeration of the SSD. The three translation units stay disabled until the host controller is ready. |
+| Internal SSD and external USB host | The controller has six physical ports. Storage, Wi-Fi and USB use ports 0, 2 and 4. S8001 first-load initialization and enumeration passed on Wi-Fi port 2; DART2 attached to the endpoint. | PCIe unload/reload, S8001 ANS storage integration, and read-only SSD enumeration. Wi-Fi DMA traffic passed; storage remains separate. Storage and external USB remain disabled. |
 | Battery and charging | The board tree connects the TI BQ27540 gauge to UART5 on AP GPIO 130. The 16 KiB kernel includes the HDQ bus and gauge drivers. Three Linux samples returned battery status, capacity, temperature, charge and varying voltage/current readings. | Measurement accuracy and charging behavior. The separate D2231 charger needs its own support. |
-| Wi-Fi and Bluetooth | iPadOS identified the WhitezinA USI radio module. Its running Wi-Fi firmware ID matched the C5 image. The firmware recipe includes Wi-Fi and vendor-specific Bluetooth files. The new TCA7408 I²C GPIO driver preserves the radio enable lines at probe. | Wi-Fi enumeration over PCIe, Bluetooth transport and vendor selection over UART, and successful connections from Linux. |
-| Touchscreen and Apple Pencil | The board describes the SPI3 bus, its chip select and clock. The firmware recipe converts the K1F18,2 touch profile, including profiles with no reset policy. | The K1 HID transport and input reports. Stock iPadOS reports an 8,676-byte maximum packet, larger than the existing Z2 driver's 8,192-byte receive buffer. Touch and Pencil input are unverified. |
-| Ambient light | The I²C3 bus carries two CT821 sensors. The driver selects calibration by orientation. One sensor exposes raw readings because it needs a screen-light compensation model. | Readings from the Linux IIO interfaces and a measured compensation model for the remaining lux channel. |
+| Wi-Fi and Bluetooth | Linux enumerated Wi-Fi `14e4:43a3`, measured OTP `CIDR-u-2.11`, and passed WPA2, DHCP and Internet traffic after factory-address provisioning. Bluetooth Reset/Read Local Version passed over raw UART3 and Linux HCI, and the exact USI Patchram upload/restart passed. The powered adapter and factory-address validation passed. | Wi-Fi throughput/roaming/suspend; Bluetooth RF connectivity, pairing, LE enablement and audio. |
+| Touchscreen and Apple Pencil | The opt-in Linux probes passed ROM readiness, firmware/calibration upload and E2/E3 metadata queries. Firmware reported an 8,676-byte maximum packet, within the driver's 16 KiB hard limit. | Interrupt-driven contact handling and input events; descriptor checks and a short contact-frame capture passed. The diagnostic probes register no input device and do not qualify touch or Pencil input. |
+| Audio | Owned board data identifies CS42L81 on SPI1, MCA1 music audio, and four MAX98721 speaker amplifiers. Linux has CS42L81 and A9 MCA drivers, but the board routes are absent. | Resolve codec MCLK routing, qualify SPI codec identity and SmartIO DMA, then headphones. J98a needs distinct TX/RX DMA FIFO/trigger settings. No matching MAX98721 amplifier driver exists; speakers need separate development. |
+| Ambient light | Both CT821 sensors bind through Linux IIO and load the factory calibration. The raw-only sensor responds to covering; the second returns calibrated lux. | A screen-light compensation model for the raw-only sensor, independent coverage/response testing of the second sensor, and lux accuracy. |
 | Motion sensors | The recipe extracts the two firmware images for the board's motion coprocessor. | Processor startup, memory layout, accelerometer and gyroscope reports. |
 | Video decoder | The board reports MSVDX version 9. Its interrupt and register windows are described in the kernel. The recipe pins Apple's DEVA image. | Decoder initialization, MMU setup and decoding a known test clip. The decoder node stays disabled. |
-| Display, USB and other peripherals | The first RAM boot verified the simpledrm display, USB serial and USB networking with SSH. The existing tree also describes buttons and backlight. The Apple board description identifies the ISP and GPU. | Buttons, backlight control, GPU acceleration, cameras, audio, suspend/resume and Touch ID still lack qualification on this unit. This Wi-Fi model has no cellular modem. |
+| Display, USB and other peripherals | Native RAM checks verified the simpledrm display, USB serial, USB networking with SSH, visible backlight changes and press/release events from all four buttons. The Apple board description identifies the ISP and GPU. | GPU acceleration, cameras, audio, suspend/resume and Touch ID still lack qualification on this unit. This Wi-Fi model has no cellular modem. |
 
 ## Evidence and verification
 

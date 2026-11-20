@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "files": {
+    "LICENSE": {
+      "bytes": 1085,
+      "sha256": "0b45dad86488537ca06341abd04bd22995ec440afe902fafd4c0d67d0846fa87"
+    },
+    "README.rst": {
+      "bytes": 12195,
+      "sha256": "52e93650ce100187f1f65925076e5d98f0ac4e0cf33f771e9ca19a9ff2efa557"
+    },
+    "build.sh": {
+      "bytes": 2562,
+      "sha256": "3cec55a155c46dff8a5f857a191a6f6682394519adbfed1ba264da0fe845fe0d"
+    },
+    "build-metadata.json": {
+      "bytes": 3157,
+      "sha256": "93d0f4218f54e996d269252b50daf6c7262f50a22689a64af76b9b8c476e79af"
+    },
+    "h4_probe.c": {
+      "bytes": 6369,
+      "sha256": "e2c541b069a54cd23ac71bc16c2ac0a907363f94b96dacfd41814efc1ee4e104"
+    },
+    "hci_attach_probe.c": {
+      "bytes": 7839,
+      "sha256": "9a6f2e2dad5c4ee06aa0f3262342209e88a1c3a18b4996778725595fee4d3a09"
+    },
+    "j98a_patchram.h": {
+      "bytes": 4980,
+      "sha256": "37a66a290688cb69e1c075e6b39c55d04065ff7ae134f55fccd89f71b87d90ae"
+    },
+    "hci_managed_session.c": {
+      "bytes": 10236,
+      "sha256": "2f69e8b6a2fdd831b75ca3cee097a1f139bb805faf333a45a97f875be46f0a30"
+    },
+    "hci_uart_supervisor.c": {
+      "bytes": 5157,
+      "sha256": "5b25375f67236c7415cbfa8791778d043de2e8ff8b61323c260f786cec2faeb5"
+    },
+    "j98a-managed-session": {
+      "bytes": 495,
+      "sha256": "18b80c70c3f5cc086407667516d8ac4038a9645154ce534170ee9be84deaeec2"
+    },
+    "hci_metadata_monitor.c": {
+      "bytes": 4639,
+      "sha256": "8e0c19a8e3cb3267a0093bb6904814029d83d3a131d3c025eaeb48a6ad5a2684"
+    },
+    "test_hci_monitor.py": {
+      "bytes": 3698,
+      "sha256": "0b94d8857a691effd6a863314a1f0d6cd8fbbd0c060b5da0fd914db896257219"
+    },
+    "hci_adapter_check.c": {
+      "bytes": 4516,
+      "sha256": "b883bf4d86f195e9f8d53150b08d07d8fab9b20695b46aa488806048a0634f27"
+    },
+    "test_hci_adapter_check.py": {
+      "bytes": 2976,
+      "sha256": "18fcdc1ebd43c11fa127d2b81a4e457d0b46d17f050b3ace1656aa7cc0744b4d"
+    },
+    "hci_factory_address.c": {
+      "bytes": 9332,
+      "sha256": "d088939534c53a5188a0ba2502328467e3c378490e85cb0615c027f3a5bb7f8b"
+    },
+    "test_hci_factory_address.py": {
+      "bytes": 4766,
+      "sha256": "2ffc55cb37e9301240e36fcff82813d61be15be4d51abd540616d2391dae0709"
+    },
+    "test_h4_probe.py": {
+      "bytes": 4593,
+      "sha256": "10576689567ae50b86916ae4fa43551e52152c633c64c6559fa842e03ba931e0"
+    },
+    "test_hci_attach_probe.py": {
+      "bytes": 2912,
+      "sha256": "fbe67e856ad622e458556371675c27d2bcce1a2a7559cd4d3479e66809ec3628"
+    },
+    "test_hci_patchram.py": {
+      "bytes": 5474,
+      "sha256": "f56e70424fed92ce1a4ad5ab6e871b34b5696cb25841032776889a842498f70d"
+    },
+    "test_hci_managed.py": {
+      "bytes": 6510,
+      "sha256": "2e929d3a851ee5784433c9e6ecb8b973f12d702dc9689b1128f33179b31fcee4"
+    },
+    "test_uart_supervisor.py": {
+      "bytes": 4236,
+      "sha256": "a121966fe2d07ecf26f23d7c8942aa18f2f7418125fadde2682961868da383b6"
+    },
+    "package_sources.py": {
+      "bytes": 1762,
+      "sha256": "24c7581f77936f78c50d273291b7204af42ed08a49246847c96e072bab126fa7"
+    }
+  }
+}

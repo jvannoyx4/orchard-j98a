@@ -13,5 +13,5 @@ stages = ["iBSS", "iBEC"]
 
 [evidence]
 page_size = "xnu-6153.141.1 osfmk/arm/proc_reg.h; J98a Linux smaps measured KernelPageSize/MMUPageSize 16 kB on 2026-11-20"
-platform = "J98a native RAM boot: Linux 7.3.0-rc1+ aarch64, both CPUs online; devices/j98a/README.md"
+platform = "J98a native RAM boot: Linux 7.3.0-rc1+ aarch64, both CPUs online; backlight, four keys and ambient-light IIO checked; Wi-Fi WPA2/DHCP/Internet traffic, powered Bluetooth adapter and stock-speed touch descriptors/contact frames measured; devices/j98a/README.md"
 stages = "remote_boot two-stage CPID list"

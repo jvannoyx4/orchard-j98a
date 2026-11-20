@@ -1,0 +1,13 @@
+#!/bin/busybox sh
+# Caller owns REG_ON/DEVICE_WAKE power and restores them after this exits.
+set -eu
+if test "${1:-}" != --worker; then
+    test "$#" -eq 3 || { echo "Usage: $0 /dev/ttySAC3 USI.hcd private-factory-address.bin" >&2; exit 2; }
+    exec /bin/busybox timeout -k 8 120 "$0" --worker "$@"
+fi
+shift
+test "$#" -eq 3 || exit 2
+location=${0%/*}
+test "$location" != "$0" || location=.
+"$location/hci-patchram-probe-aarch64" "$1" "$2"
+exec "$location/hci-managed-session-aarch64" "$1" "$3"
