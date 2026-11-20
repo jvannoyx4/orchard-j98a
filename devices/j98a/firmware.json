@@ -62,6 +62,13 @@
         "kernelcache": true
       },
       "sha256": "ac8948f598c07a101550e7b1a53ee1f25b79206157f621311e58a166b1578211"
+    },
+    "BlueTool": {
+      "ipsw": {
+        "rootfs": "usr/sbin/BlueTool"
+      },
+      "device": "/usr/sbin/BlueTool",
+      "sha256": "5eec00a4a2a710688bc5ee453c1f3c875966374258b3d455f4347a7458cbff90"
     }
   },
   "outputs": [
@@ -164,6 +171,26 @@
         {
           "step": "vxd-firmware-from-kernelcache@1",
           "input": "kernelcache"
+        }
+      ]
+    },
+    {
+      "destination": "lib/firmware/brcm/BCM.apple,j98a-MUR.hcd",
+      "sha256": "8b23486cd641beb80bf4975d3da1067f1567ee3d2b03af1d415fbf4cc6b5ff44",
+      "steps": [
+        {
+          "step": "bluetool-hcd@1",
+          "input": "BlueTool"
+        }
+      ]
+    },
+    {
+      "destination": "lib/firmware/brcm/BCM.apple,j98a-USI.hcd",
+      "sha256": "958ee3706c9479017704aab1ea246ff77865628e75eae2d62bcb934cd10ab8a4",
+      "steps": [
+        {
+          "step": "bluetool-hcd@1",
+          "input": "BlueTool"
         }
       ]
     }
