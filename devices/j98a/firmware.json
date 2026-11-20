@@ -14,7 +14,142 @@
         "zip": "Firmware/all_flash/DeviceTree.j98aap.im4p"
       },
       "sha256": "407bb78afa17fc912919e9a11bb41f822427021f1b87fada90cd439c614234dd"
+    },
+    "P-whitezina_M-CIDR_V-m__m-2.15.txt": {
+      "ipsw": {
+        "rootfs": "System/Library/DriverExtensions/com.apple.DriverKit-AppleBCMWLAN.dext/Firmware/C-4350__s-C5/P-whitezina_M-CIDR_V-m__m-2.15.txt"
+      },
+      "sha256": "972d438560498741c0a9076dd92764b95f9ba47608d4847707e9a79229ec836d"
+    },
+    "P-whitezina_M-CIDR_V-u__m-2.11.txt": {
+      "ipsw": {
+        "rootfs": "System/Library/DriverExtensions/com.apple.DriverKit-AppleBCMWLAN.dext/Firmware/C-4350__s-C5/P-whitezina_M-CIDR_V-u__m-2.11.txt"
+      },
+      "sha256": "da9a86cce4dec56c86041daa1603ae41269ee443345d26dd51601479ccb38936"
+    },
+    "whitezina.clmb": {
+      "ipsw": {
+        "rootfs": "System/Library/DriverExtensions/com.apple.DriverKit-AppleBCMWLAN.dext/Firmware/C-4350__s-C5/whitezina.clmb"
+      },
+      "sha256": "7ee74d49f530efcc59ebc4cef104d9088a264ff4d2c8e8d1c5b339d4732051c2"
+    },
+    "whitezina.trx": {
+      "ipsw": {
+        "rootfs": "System/Library/DriverExtensions/com.apple.DriverKit-AppleBCMWLAN.dext/Firmware/C-4350__s-C5/whitezina.trx"
+      },
+      "sha256": "7c87c5cb6f70bfc89b82a00c6ca7027552014514a778f930a3e8681b994117d9"
+    },
+    "whitezina.txcb": {
+      "ipsw": {
+        "rootfs": "System/Library/DriverExtensions/com.apple.DriverKit-AppleBCMWLAN.dext/Firmware/C-4350__s-C5/whitezina.txcb"
+      },
+      "sha256": "fc927a56785bf41e3781f9ada59f0d4f0de6e71bfa5b39afa2e6b2fd5b2e4794"
+    },
+    "J98a.mtprops": {
+      "ipsw": {
+        "rootfs": "usr/share/firmware/multitouch/J98a.mtprops"
+      },
+      "sha256": "be8a1fce3b050f4dc97c533ed8bae58de12a573c03faa892478c3a4c2ad24083"
+    },
+    "aop.im4p": {
+      "ipsw": {
+        "zip": "Firmware/AOP/aopfw-ipad6daop.im4p"
+      },
+      "sha256": "e5b67ae0db3bb1754362cf8394437cd389e5badbaea8e1b1201dea5e1e8c40dd"
     }
   },
-  "outputs": []
+  "outputs": [
+    {
+      "destination": "lib/firmware/brcm/brcmfmac4350-pcie.apple,j98a-CIDR-m-2.15.txt",
+      "sha256": "972d438560498741c0a9076dd92764b95f9ba47608d4847707e9a79229ec836d",
+      "steps": [
+        {
+          "step": "copy@1",
+          "input": "P-whitezina_M-CIDR_V-m__m-2.15.txt"
+        }
+      ]
+    },
+    {
+      "destination": "lib/firmware/brcm/brcmfmac4350-pcie.apple,j98a-CIDR-u-2.11.txt",
+      "sha256": "da9a86cce4dec56c86041daa1603ae41269ee443345d26dd51601479ccb38936",
+      "steps": [
+        {
+          "step": "copy@1",
+          "input": "P-whitezina_M-CIDR_V-u__m-2.11.txt"
+        }
+      ]
+    },
+    {
+      "destination": "lib/firmware/brcm/brcmfmac4350-pcie.apple,j98a.clm_blob",
+      "sha256": "7ee74d49f530efcc59ebc4cef104d9088a264ff4d2c8e8d1c5b339d4732051c2",
+      "steps": [
+        {
+          "step": "copy@1",
+          "input": "whitezina.clmb"
+        }
+      ]
+    },
+    {
+      "destination": "lib/firmware/brcm/brcmfmac4350-pcie.apple,j98a.bin",
+      "sha256": "7c87c5cb6f70bfc89b82a00c6ca7027552014514a778f930a3e8681b994117d9",
+      "steps": [
+        {
+          "step": "copy@1",
+          "input": "whitezina.trx"
+        }
+      ]
+    },
+    {
+      "destination": "lib/firmware/brcm/brcmfmac4350-pcie.apple,j98a.txcap_blob",
+      "sha256": "fc927a56785bf41e3781f9ada59f0d4f0de6e71bfa5b39afa2e6b2fd5b2e4794",
+      "steps": [
+        {
+          "step": "copy@1",
+          "input": "whitezina.txcb"
+        }
+      ]
+    },
+    {
+      "destination": "lib/firmware/apple/j98a-touch.z2fw",
+      "sha256": "ffacb5f3786f328e27541fa87037cb0b82d61276e2e1692ccaaf35e6e58d2b09",
+      "steps": [
+        {
+          "step": "z2fw-from-mtprops@1",
+          "input": "J98a.mtprops",
+          "profile": "K1F18,2",
+          "packet": "K1HBPP14",
+          "load_address": 1048576,
+          "hbpp_version": 260
+        }
+      ]
+    },
+    {
+      "destination": "lib/firmware/apple/aop-ipad6d.bin",
+      "sha256": "56a82f2de1d6bf488e45949855d693577baba7886f5cc9ef36a296efb50bddcd",
+      "steps": [
+        {
+          "step": "im4p-payload@1",
+          "input": "aop.im4p"
+        },
+        {
+          "step": "aop-image@1",
+          "coprocessor": "AOP"
+        }
+      ]
+    },
+    {
+      "destination": "lib/firmware/apple/aop-ipad6d-ext.bin",
+      "sha256": "59ef910c68d28a6c0f184b287f44add4013d1a8364c16c6d7aa3360e0a446e10",
+      "steps": [
+        {
+          "step": "im4p-payload@1",
+          "input": "aop.im4p"
+        },
+        {
+          "step": "aop-image@1",
+          "coprocessor": "AOP_ext"
+        }
+      ]
+    }
+  ]
 }

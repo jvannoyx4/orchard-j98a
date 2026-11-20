@@ -21,7 +21,7 @@ platform = "apple-16k"
 dtb = "s8001-j98a" # arch/arm64/boot/dts/apple/<dtb>.dtb
 
 [firmware]
-recipe = "firmware.json" # Pins this board's public IPSW; converts nothing until bring-up needs it.
+recipe = "firmware.json" # Touchscreen, motion coprocessor and BCM4350 C5 Wi-Fi firmware.
 
 [support]
 status = "experimental"
@@ -44,7 +44,7 @@ storage_write = "missing"
 wifi = "missing"
 bluetooth_input = "missing"
 bluetooth_audio = "missing"
-cellular = "missing"
+cellular = "none"
 battery = "missing"
 charging = "missing"
 charging_control = "missing"
