@@ -1,5 +1,5 @@
-# iPad Pro 12.9-inch (Wi-Fi) (J98A): identity from public sources
-# (tools/catalog/generate). In its platform's kernel, no bring-up yet; see docs/device-bring-up.md.
+# iPad Pro 12.9-inch (Wi-Fi) (J98a): native RAM boot measured on 2026-11-20.
+# Companion kernel and boot evidence: devices/j98a/README.md.
 schema = 1
 kind = "hardware.device"
 
@@ -14,7 +14,7 @@ chip = 0x8001
 board = 0x10
 
 [boot]
-methods = ["checkm8-pongo"] # palera1n's device list (palera.in); not run with Orchard yet.
+methods = ["checkm8-pongo"] # checkra1n, Hoolock Pongo and Orchard RAM boot tested.
 
 [kernel]
 platform = "apple-16k"
@@ -26,11 +26,10 @@ recipe = "firmware.json" # See the J98a port notes for the measured firmware var
 [support]
 status = "experimental"
 
-# States: working, untested, missing, none (features.toml). Nothing here has run on
-# this board with Orchard: "untested" means a driver binds in its device tree
-# (tools/catalog/drivers.json), plus the display's boot console.
+# States: working, untested, missing, none (features.toml). Working states below
+# describe the measured companion-kernel RAM boot, not a persistent installation.
 [features]
-display = "untested"
+display = "working"
 screen_off = "missing"
 backlight = "untested"
 touch = "missing"
@@ -45,13 +44,13 @@ wifi = "missing"
 bluetooth_input = "missing"
 bluetooth_audio = "missing"
 cellular = "none"
-battery = "missing"
+battery = "working"
 charging = "missing"
 charging_control = "missing"
 suspend = "untested"
 resume = "untested"
-usb_serial = "untested"
-usb_network = "untested"
+usb_serial = "working"
+usb_network = "working"
 usb_host = "missing"
 audio_output = "missing"
 audio_input = "missing"
