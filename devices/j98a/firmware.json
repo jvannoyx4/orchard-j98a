@@ -56,6 +56,12 @@
         "zip": "Firmware/AOP/aopfw-ipad6daop.im4p"
       },
       "sha256": "e5b67ae0db3bb1754362cf8394437cd389e5badbaea8e1b1201dea5e1e8c40dd"
+    },
+    "kernelcache": {
+      "ipsw": {
+        "kernelcache": true
+      },
+      "sha256": "ac8948f598c07a101550e7b1a53ee1f25b79206157f621311e58a166b1578211"
     }
   },
   "outputs": [
@@ -148,6 +154,16 @@
         {
           "step": "aop-image@1",
           "coprocessor": "AOP_ext"
+        }
+      ]
+    },
+    {
+      "destination": "lib/firmware/apple/vxd-deva.bin",
+      "sha256": "bf5167652e81540471aaca141943fd33d71c3990c137f145471305f5f5ade83b",
+      "steps": [
+        {
+          "step": "vxd-firmware-from-kernelcache@1",
+          "input": "kernelcache"
         }
       ]
     }
