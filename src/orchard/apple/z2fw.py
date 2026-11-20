@@ -157,18 +157,24 @@ def convert(profile, config, *, packet, load_address, hbpp_version):
     names = [item.get('Provider') for item in calibration]
     if not set(names) <= set(PROVIDERS) or len(set(names)) != len(names):
         raise ValueError('Duplicate or unsupported calibration provider')
-    if not isinstance(config.get('Power Off On Reset'), bool):
+    # Some K1HBPP14 profiles omit this flag. An absent flag has no valid
+    # bit in the configuration record, even though its word is zero.
+    has_reset_policy = 'Power Off On Reset' in config
+    if has_reset_policy and not isinstance(config['Power Off On Reset'], bool):
         raise ValueError('Power Off On Reset must be a boolean')
     spi = config['SPI Config']
     timeout = config['Boot Timeout']
     # Preserve source scalar values. CS Delay=10000 and Clock Period Ms=41
     # are raw metadata, not independently established Linux units.
-    words = [(1<<9)-1 | (1<<11), uint(config['Min DMA Transfer Size'], 'DMA minimum'),
+    valid = (1 << 7) - 1 | (1 << 8) | (1 << 11)
+    if has_reset_policy:
+        valid |= 1 << 7
+    words = [valid, uint(config['Min DMA Transfer Size'], 'DMA minimum'),
              uint(config['Z2 Config']['Inter Packet Delay'], 'Z2 delay'),
              uint(spi['CS Delay'], 'raw CS delay'), uint(spi['Clock Phase'], 'CPHA', 1),
              uint(spi['Clock Polarity'], 'CPOL', 1), uint(spi['Word Delay'], 'word delay'),
              uint(spi['Clock Period Ms'], 'raw clock period'),
-             int(config['Power Off On Reset'] is True),
+             int(config.get('Power Off On Reset', False)),
              uint(timeout['Normal Boot Ms'], 'normal timeout', 30000), uint(hbpp_version, 'HBPP version', 0xffff)]
     first_boot = uint(timeout['First Boot Ms'], 'first timeout', 30000)
     if not first_boot:

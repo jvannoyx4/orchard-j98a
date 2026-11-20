@@ -136,6 +136,38 @@ class PacketEncoding(unittest.TestCase):
             z2fw.hbpp_config({'Power Off On Reset': 1}, overrides=False)
 
 
+class SinglePacketConversion(unittest.TestCase):
+    def test_reset_policy_validity_for_k1_profiles(self):
+        fixture = plistlib.loads(mtprops_fixture())['TEST,2']
+        fixture['Constructed Firmware'] = z2fw.encode_blob(0x100000, b'1234')
+        config = apple_xml(fixture['Firmware Config'])
+        config['Boot Timeout']['First Boot Ms'] = 1000
+        config['Boot Sequence'] = []
+        del config['Power Off On Reset']
+
+        def config_words():
+            data, _ = z2fw.convert(fixture, config, packet='TESTPKT',
+                                   load_address=0x100000, hbpp_version=0x104)
+            code, words = z2fw.decode_container(data)[0]
+            self.assertEqual(code, z2fw.CONFIG)
+            return struct.unpack('<11I', words)
+
+        # Without an explicit policy, the driver gets no policy override.
+        missing = config_words()
+        self.assertEqual(missing[0], 0x97f)
+        self.assertEqual(missing[8], 0)
+        for policy in (False, True):
+            with self.subTest(policy=policy):
+                config['Power Off On Reset'] = policy
+                present = config_words()
+                self.assertEqual(present[0], missing[0] | (1 << 7))
+                self.assertEqual(present[8], int(policy))
+                self.assertEqual(present[1:8] + present[9:], missing[1:8] + missing[9:])
+        config['Power Off On Reset'] = 1
+        with self.assertRaisesRegex(ValueError, 'must be a boolean'):
+            config_words()
+
+
 class MtfwConversion(unittest.TestCase):
     def test_matches_makez2fw_without_calibration(self):
         output, info = z2fw.convert_mtfw(apple_xml(mtfw_fixture(False)), 'TEST,6', otp_preflight=True)
