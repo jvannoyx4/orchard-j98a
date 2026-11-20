@@ -1,5 +1,7 @@
 # Orchard
 
+This fork develops native Linux support for the **2015 iPad Pro 12.9-inch Wi-Fi (J98a)**. Internal storage support is incomplete. See the [J98a port status and kernel source](devices/j98a/README.md).
+
 Linux on Apple devices. This repository holds everything a device needs and the
 `orchard` tool that builds, boots and installs it: device descriptions, kernel
 patches and configuration, m1n1 and Pongo patches, firmware recipes, the recovery

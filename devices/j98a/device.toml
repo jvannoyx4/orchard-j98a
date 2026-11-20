@@ -21,7 +21,7 @@ platform = "apple-16k"
 dtb = "s8001-j98a" # arch/arm64/boot/dts/apple/<dtb>.dtb
 
 [firmware]
-recipe = "firmware.json" # Touchscreen, motion coprocessor and BCM4350 C5 Wi-Fi firmware.
+recipe = "firmware.json" # See the J98a port notes for the measured firmware variants.
 
 [support]
 status = "experimental"
